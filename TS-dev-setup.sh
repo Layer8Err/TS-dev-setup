@@ -101,7 +101,7 @@ cp ./package.json ./package.json.mod
 scrlnum=$(grep -Fn -m1 "scripts" ./package.json | cut -d ":" -f 1)
 head -n $scrlnum ./package.json.mod > ./package.json
 spc='    '
-echo "${spc}\"start:dev\": \"nodemon\"," >> ./package.json
+echo "${spc}\"dev\": \"nodemon\"," >> ./package.json
 lc=$(wc -l < ./package.json.mod)
 tl="$(($lc-$scrlnum))"
 tail -n $tl ./package.json.mod >> ./package.json
@@ -119,4 +119,4 @@ rm ./package.json.mod
 
 ## Launch Dev environment 
 echo "Launching TS dev environment..."
-npm run start:dev
+npm run dev
