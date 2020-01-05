@@ -92,11 +92,10 @@ read -d '' tsconfig << "EOF"
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "noImplicitAny": true,
+    "noImplicitAny": true
   },
-    "include": ["src/"],
-    "exclude": ["node_modules"]
-  }
+  "include": ["src/"],
+  "exclude": ["node_modules"]
 }
 EOF
 echo "Creating JSON config for ts-node-dev..."
@@ -109,7 +108,8 @@ cp ./package.json ./package.json.mod
 scrlnum=$(grep -Fn -m1 "scripts" ./package.json | cut -d ":" -f 1)
 head -n $scrlnum ./package.json.mod > ./package.json
 spc='    '
-echo "${spc}\"start:dev\": \"ts-node-dev\"," >> ./package.json
+echo "${spc}\"ts-node-dev\": \"ts-node-dev\"," >> ./package.json
+echo "${spc}\"dev\": \"TS_NODE_PROJECT='./tsconfig.json' ts-node-dev --respawn ./src/boot.ts\"," >> ./package.json
 lc=$(wc -l < ./package.json.mod)
 tl="$(($lc-$scrlnum))"
 tail -n $tl ./package.json.mod >> ./package.json
@@ -127,4 +127,6 @@ rm ./package.json.mod
 
 ## Launch Dev environment 
 echo "Launching TS dev environment..."
-npm run start:dev
+echo "-- Enter 'rs' to restart project"
+#npm run ts-node-dev boot.ts
+npm run dev
