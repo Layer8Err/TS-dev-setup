@@ -81,27 +81,35 @@ echo "$tsconf" >> ./tsconfig.json
 
 # Use watcher for reload on change
 echo "Installing NPM watcher for changes..."
-sudo npm install --save-dev nodemon ts-node
+sudo npm install --save-dev ts-node ts-node-dev
 
-# Create nodemon config
-read -d '' nodemonjson << "EOF"
+# Create tsconfig config for ts-node-dev
+read -d '' tsconfig << "EOF"
 {
-  "watch": ["src"],
-  "ext": "ts js json proto",
-  "exec": "ts-node ./src/boot.ts"
+  "compilerOptions": {
+    "module": "commonjs",
+    "rootDir": "src",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true
+  },
+  "include": ["src/"],
+  "exclude": ["node_modules"]
 }
 EOF
-echo "Creating JSON config for nodemon..."
-echo "$nodemonjson" >> ./nodemon.json
+echo "Creating JSON config for ts-node-dev..."
+echo "$tsconfig" > ./tsconfig.json
 
-# Autostart nodemon for dev
+# Autostart ts-node-dev for dev
 # Entry should be under "scripts": {
-echo "Adding nodemon autostart entry to package.json..."
+echo "Adding ts-node-dev autostart entry to package.json..."
 cp ./package.json ./package.json.mod
 scrlnum=$(grep -Fn -m1 "scripts" ./package.json | cut -d ":" -f 1)
 head -n $scrlnum ./package.json.mod > ./package.json
 spc='    '
-echo "${spc}\"start:dev\": \"nodemon\"," >> ./package.json
+echo "${spc}\"ts-node-dev\": \"ts-node-dev\"," >> ./package.json
+echo "${spc}\"dev\": \"TS_NODE_PROJECT='./tsconfig.json' ts-node-dev --respawn ./src/boot.ts\"," >> ./package.json
 lc=$(wc -l < ./package.json.mod)
 tl="$(($lc-$scrlnum))"
 tail -n $tl ./package.json.mod >> ./package.json
@@ -119,4 +127,6 @@ rm ./package.json.mod
 
 ## Launch Dev environment 
 echo "Launching TS dev environment..."
-npm run start:dev
+echo "-- Enter 'rs' to restart project"
+#npm run ts-node-dev boot.ts
+npm run dev
