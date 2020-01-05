@@ -26,15 +26,15 @@ echo "$bootts" >> src/boot.ts
 echo "Creating boilerplate tsconfig..."
 read -d '' tsconf << "EOF"
 {
-  // This attribute will hold all the compile option of TypeScript
+  // This attribute will hold all the transpile options of TypeScript
   "compilerOptions": {
     // Source code location
     "rootDir": "src",
-    // Where you want to put our compiled code
-    "outDir": "build",
+    // Where you want to put transpiled code
+    "outDir": "dist",
 
     // Which ES library you want to include
-    // If the project will be used as a server, no browser, then use the esnext or one of the latest versions)
+    // If the project will be used as a server, no browser, then use the esnext or one of the latest versions
     // Otherwise, consider ES6 but
     // If you omit the option it will use:
     //  For --target ES5: DOM,ES5,ScriptHost
@@ -47,8 +47,8 @@ read -d '' tsconf << "EOF"
     // Ref: @see https://node.green
     "target": "es2018",
 
-    // How you want to resolve your module, TypeScript tends to use the `classic` way but let's
-    // stick with the `node` one
+    // How you want to resolve your module, TypeScript tends to use the `classic` way
+    // we use the `node` one
     // @see https://www.typescriptlang.org/docs/handbook/module-resolution.html
     "moduleResolution": "node",
 
@@ -57,15 +57,15 @@ read -d '' tsconf << "EOF"
     // Otherwise use es6
     "module": "es6",
 
-    // Sourcemap is usefull for the debugging part
-    // During dev you should active this one and then disable it in production
+    // Sourcemap is usefull for debugging
+    // set to false when deploying to production
     "sourceMap": true,
 
-    // Reolve `.json`file without tricking with a custom and bad json.d.ts file
+    // Reolve `.json`file without a bad json.d.ts file
     "resolveJsonModule": true,
 
-    // Allow to import node module without `import *`
-    // Ex import express from 'express'
+    // Allow importing node module without `import *`
+    // e.g. import express from 'express'
     "esModuleInterop": true
   },
 
@@ -73,7 +73,7 @@ read -d '' tsconf << "EOF"
   // You can also use regex e.g. `**/*.spec.ts`
   "exclude":[
     "node_modules",
-    "build"
+    "dist"
   ]
 }
 EOF
@@ -123,7 +123,7 @@ rm ./package.json.mod
 
 ## Run Javascript
 #echo "Running transpiled Javascript..."
-#node ./build/boot.js
+#node ./dist/boot.js
 
 ## Launch Dev environment 
 echo "Launching TS dev environment..."
